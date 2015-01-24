@@ -20,16 +20,13 @@ func main() {
 	// A file input source.
 	fin, err := os.Open("res/dict.txt")
 	r := bufio.NewReader(fin)
-	// for now, just reading a single line
-	line, _, err := r.ReadLine()
-	fmt.Printf("Line: %v (error %v)\n", string(line), err)
-	
+
+	strFromReader, err := r.ReadString('\n')
+	fmt.Printf("Line: %v (error %v)\n", strFromReader, err)
 	
 	// convert that line to a string
-	linestring := string(line)  // bufio expects a string
-	scanner := bufio.NewScanner(strings.NewReader(linestring))
+	scanner := bufio.NewScanner(strings.NewReader(strFromReader))
 
-	
 	// Set the split function for the scanning operation.
 	scanner.Split(bufio.ScanWords)
 	// Count the words.
