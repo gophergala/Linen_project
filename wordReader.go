@@ -5,6 +5,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -19,24 +20,27 @@ func main() {
 	
 	// A file input source.
 	fin, err := os.Open("res/dict.txt")
-	r := bufio.NewReader(fin)
+	if err == nil {
+		r := bufio.NewReader(fin)
+		for strFromReader, err := r.ReadString('\n'); err != io.EOF; strFromReader, err = r.ReadString('\n') {
+			fmt.Printf("Line: %v (error %v)\n", strFromReader, err)
+			// create another scanner for that string
+			strScanner := bufio.NewScanner(strings.NewReader(strFromReader))
 
-	strFromReader, err := r.ReadString('\n')
-	fmt.Printf("Line: %v (error %v)\n", strFromReader, err)
-	
-	// convert that line to a string
-	scanner := bufio.NewScanner(strings.NewReader(strFromReader))
-
-	// Set the split function for the scanning operation.
-	scanner.Split(bufio.ScanWords)
-	// Count the words.
-	count := 0
-	for scanner.Scan() {
-		count++
+			// Set the split function for the scanning operation.
+			strScanner.Split(bufio.ScanWords)
+			// Count the words.
+			count := 0
+			for strScanner.Scan() {
+				count++
+			}
+			if err := strScanner.Err(); err != nil {
+				fmt.Fprintln(os.Stderr, "reading input:", err)
+			}
+			fmt.Printf("%d\n", count)
+		}
+	} else {
+		fmt.Println("Error: the file to be read is not found")
 	}
-	if err := scanner.Err(); err != nil {
-		fmt.Fprintln(os.Stderr, "reading input:", err)
-	}
-	fmt.Printf("%d\n", count)
-
 }
+
