@@ -11,15 +11,10 @@ import (
 )
 
 func main() {
-/*
-	// An artificial input source.
-	const input = "Now is the winter of our discontent,\nMade glorious summer by this sun of York.\n"
-	scanner := bufio.NewScanner(strings.NewReader(input))
-*/
-
-	
 	// A file input source.
 	fin, err := os.Open("res/dict.txt")
+	bagOfWords := make(map[string]int)
+
 	if err == nil {
 		r := bufio.NewReader(fin)
 		for strFromReader, err := r.ReadString('\n'); err != io.EOF; strFromReader, err = r.ReadString('\n') {
@@ -32,12 +27,24 @@ func main() {
 			// Count the words.
 			count := 0
 			for strScanner.Scan() {
+				word := strScanner.Text()
+				if count, ok := bagOfWords[word]; ok{
+					bagOfWords[word] = count + 1
+				} else {
+					bagOfWords[word] = 1
+				}
+				fmt.Printf("%s, ", word)
 				count++
 			}
 			if err := strScanner.Err(); err != nil {
 				fmt.Fprintln(os.Stderr, "reading input:", err)
 			}
 			fmt.Printf("%d\n", count)
+
+		}
+		fmt.Printf("\nHere is the result of the word count...\n")
+		for key, value := range bagOfWords {
+			fmt.Println("Key:", key, "Value:", value)
 		}
 	} else {
 		fmt.Println("Error: the file to be read is not found")
