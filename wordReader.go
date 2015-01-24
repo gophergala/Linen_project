@@ -10,9 +10,26 @@ import (
 )
 
 func main() {
+/*
 	// An artificial input source.
 	const input = "Now is the winter of our discontent,\nMade glorious summer by this sun of York.\n"
 	scanner := bufio.NewScanner(strings.NewReader(input))
+*/
+
+	
+	// A file input source.
+	fin, err := os.Open("res/dict.txt")
+	r := bufio.NewReader(fin)
+	// for now, just reading a single line
+	line, _, err := r.ReadLine()
+	fmt.Printf("Line: %v (error %v)\n", string(line), err)
+	
+	
+	// convert that line to a string
+	linestring := string(line)  // bufio expects a string
+	scanner := bufio.NewScanner(strings.NewReader(linestring))
+
+	
 	// Set the split function for the scanning operation.
 	scanner.Split(bufio.ScanWords)
 	// Count the words.
@@ -24,4 +41,5 @@ func main() {
 		fmt.Fprintln(os.Stderr, "reading input:", err)
 	}
 	fmt.Printf("%d\n", count)
+
 }
