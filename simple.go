@@ -9,7 +9,7 @@ import (
 
 func main() {
 	fmt.Println("Hello, Linen Project")
-	fin, err := os.Open("dict.txt")
+	fin, err := os.Open("res/dict.txt")
 	if (err==nil) {
 		fmt.Println("File exists!")
 		r := bufio.NewReader(fin) 
